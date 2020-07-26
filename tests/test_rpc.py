@@ -19,10 +19,9 @@ async def sleep_back_actor(
             try:
                 await portal.run(__name__, func_name)
             except tractor.RemoteActorError as err:
+                expect = tractor.ModuleNotExposed
                 if not func_defined:
                     expect = AttributeError
-                if not exposed_mods:
-                    expect = tractor.ModuleNotExposed
 
                 assert err.type is expect
                 raise
