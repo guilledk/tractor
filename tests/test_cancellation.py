@@ -328,14 +328,14 @@ async def test_nested_multierrors(loglevel, start_method):
             for subexc in err.exceptions:
 
                 # verify first level actor errors are wrapped as remote
-                if platform.system() == 'Windows':
+                if platform.system() in ('Windows', 'Darwin'):
 
-                    # windows is often too slow and cancellation seems
-                    # to happen before an actor is spawned
+                    # on windows & darwin systems cancellation is often too
+                    # slow and seems to happen before an actor is spawned
                     if isinstance(subexc, trio.Cancelled):
                         continue
                     else:
-                        # on windows it seems we can't exactly be sure wtf
+                        # sometimes it seems we can't exactly be sure wtf
                         # will happen..
                         assert subexc.type in (
                             tractor.RemoteActorError,
